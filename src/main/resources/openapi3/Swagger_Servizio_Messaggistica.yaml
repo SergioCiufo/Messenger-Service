@@ -1,0 +1,141 @@
+openapi: 3.0.3
+info:
+  title: Chat4Me
+  description: |
+    Chat4Me è un'app di messaggistica basata su microservizi, sviluppata con SpringBoot, progettata per interagire tramite API Rest.
+    - Servizio Messaggistica per la lettura/scrittura messaggi
+    - Servizio di autenticazione tramite SSO e Token autorizzativi
+  version: 1.0.0
+
+tags:
+  - name: Servizio Messaggistica
+    description: Gestione dei messaggi e degli utenti
+    
+components:
+  securitySchemes:
+    bearerAuth:
+      description: Autenticazione tramite Bearer Token (JWT). Il token deve essere passato nell'header `Authorization` con il formato `Bearer <token>`. 
+        Usato per verificare l'identità dell'utente e autorizzare l'accesso alle risorse protette. 
+        Il token scade dopo un certo periodo, per rinnovarlo usa il refresh token.
+      type: http
+      scheme: bearer
+      bearerFormat: JWT  # Facoltativo, specifica che si tratta di un JWT    
+
+paths:
+  /messages:
+    get:
+      tags:
+        - Servizio Messaggistica
+      summary: Recupero lista messaggi
+      description: Recupera la lista dei messaggi con "userId"
+      operationId: retrieveMessages
+      security: #Richiamiamo il bearerAuth del component security
+      - bearerAuth: []
+      responses:
+        '200':
+          description: Operazione completata
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 1
+                    content:
+                      type: string
+                      example: "Baka Shinji"
+                    username_sender:
+                      type: string
+                      example: "Asuka"
+                    username_receiver:
+                      type: string
+                      example: "Shinji"
+                    timestamp:
+                      type: string
+                      format: date-time
+                      example: "2025-01-20T09:00:00"
+        '204':
+          description: Messaggi non trovati per l'userId fornito (utente non esistente) #return lista vuota
+        '401':
+          description: Accesso non autorizzato (Token non valido)
+
+  /users:
+    get:
+      tags:
+        - Servizio Messaggistica
+      summary: Recupero lista utenti
+      description: Recupera la lista di tutti gli utenti registrati nel sistema
+      operationId: retrieveUsers
+      security: #Richiamiamo il bearerAuth del component security
+      - bearerAuth: []
+      responses:
+        '200':
+          description: Operazione completata
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    idUser:
+                      type: integer
+                      example: 1
+                    username:
+                      type: string
+                      example: "Asuka"
+        '204':
+          description: Utenti non trovati (utente non esistente) #return lista vuota
+
+        '401':
+          description: Accesso non autorizzato (Token non valido)
+
+  /message:
+    post:
+      tags:
+        - Servizio Messaggistica
+      summary: Invio di un messaggio
+      description: Invio messaggio ad un utente specifico (from userId_sender to userId_receiver)
+      operationId: sendMessage
+      security: #Richiamiamo il bearerAuth del component security
+      - bearerAuth: []
+      requestBody:
+        description: Dati del messaggio da inviare
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                idUser_sender:
+                  type: integer
+                  example: 1
+                idUser_receiver:
+                  type: integer
+                  example: 2
+                content:
+                  type: string
+                  example: "ciao come va?"
+      responses:
+        '200':
+          description: Messaggio inviato con successo
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messageId:
+                    type: integer
+                    example: 1
+                  status:
+                    type: string
+                    example: "Messaggio inviato con successo"
+                  timestamp:
+                    type: string
+                    format: date-time
+                    example: "2025-01-20T09:00:00"
+        '401':
+          description: Accesso non autorizzato (Token non valido)
