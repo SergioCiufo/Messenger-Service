@@ -1,4 +1,4 @@
-package com.example.messageservice.domain.model.message;
+package com.example.messageservice.domain.model.messanger;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,9 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class FirstStepGetMessageResponse {
-    private String id;
+public class FirstStepSendMessageRequest {
+    private String usernameSender;
+    private String usernameReceiver;
     private String content;
-    private String username_sender;
-    private String username_receiver;
 }

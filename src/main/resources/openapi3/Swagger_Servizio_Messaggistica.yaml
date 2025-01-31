@@ -53,10 +53,13 @@ paths:
                     username_receiver:
                       type: string
                       example: "Shinji"
-                    timestamp:
+                    createdAt:
                       type: string
                       format: date-time
                       example: "2025-01-20T09:00:00"
+                    isRead:
+                      type: boolean
+                      example: true
         '204':
           description: Messaggi non trovati per l'userId fornito (utente non esistente) #return lista vuota
         '401':
@@ -110,12 +113,12 @@ paths:
             schema:
               type: object
               properties:
-                idUser_sender:
-                  type: integer
-                  example: 1
-                idUser_receiver:
-                  type: integer
-                  example: 2
+                usernameSender:
+                  type: string
+                  example: "Asuka"
+                usernameReceiver:
+                  type: string
+                  example: "Shinji"
                 content:
                   type: string
                   example: "ciao come va?"
@@ -127,15 +130,8 @@ paths:
               schema:
                 type: object
                 properties:
-                  messageId:
-                    type: integer
-                    example: 1
-                  status:
+                  message:
                     type: string
                     example: "Messaggio inviato con successo"
-                  timestamp:
-                    type: string
-                    format: date-time
-                    example: "2025-01-20T09:00:00"
         '401':
           description: Accesso non autorizzato (Token non valido)
