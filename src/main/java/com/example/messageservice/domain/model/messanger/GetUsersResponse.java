@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class FirstStepGetUsersResponse {
+public class GetUsersResponse {
     private String idUser;
     private String username;
 }

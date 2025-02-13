@@ -1,4 +1,4 @@
-package com.example.messageservice.application.exception;
+package com.example.messageservice.domain.exception;
 
 public class MessangerServiceException extends RuntimeException {
 

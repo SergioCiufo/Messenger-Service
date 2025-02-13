@@ -1,17 +1,17 @@
 package com.example.messageservice.domain.service;
 
-import com.example.messageservice.domain.model.messanger.FirstStepGetMessageResponse;
-import com.example.messageservice.domain.model.messanger.FirstStepGetUsersResponse;
-import com.example.messageservice.domain.model.messanger.FirstStepSendMessageRequest;
-import com.example.messageservice.domain.model.messanger.FirstStepSendMessageResponse;
+import com.example.messageservice.domain.model.messanger.GetMessageResponse;
+import com.example.messageservice.domain.model.messanger.GetUsersResponse;
+import com.example.messageservice.domain.model.messanger.SendMessageRequest;
+import com.example.messageservice.domain.model.messanger.SendMessageResponse;
 
 import java.util.List;
 
 public interface MessangerService {
 
-    public List<FirstStepGetMessageResponse> getMessageFirstStep();
+    public List<GetMessageResponse> getMessage();
 
-    public List<FirstStepGetUsersResponse> getUsersFirstStep();
+    public List<GetUsersResponse> getUsers();
 
-    public FirstStepSendMessageResponse sendMessageFirstStep(FirstStepSendMessageRequest request);
+    public SendMessageResponse sendMessage(SendMessageRequest request);
 }

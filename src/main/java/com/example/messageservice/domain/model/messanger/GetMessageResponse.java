@@ -9,6 +9,11 @@ import lombok.NoArgsConstructor;
 @Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class FirstStepSendMessageResponse {
-    private String message;
+public class GetMessageResponse {
+    private String id;
+    private String content;
+    private String username_sender;
+    private String username_receiver;
+    private String createdAt;
+    private Boolean isRead;
 }

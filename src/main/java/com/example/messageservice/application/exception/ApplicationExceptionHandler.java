@@ -1,8 +1,9 @@
-package com.example.messageservice.domain.exception;
+package com.example.messageservice.application.exception;
 
-import com.example.messageservice.application.exception.MessangerServiceException;
-
-
+import com.example.messageservice.domain.exception.ApplicationException;
+import com.example.messageservice.domain.exception.EmptyFieldException;
+import com.example.messageservice.domain.exception.NotFoundException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -12,7 +13,8 @@ import org.springframework.web.context.request.WebRequest;
 
 @ControllerAdvice
 @Log4j2
-public class MessangerServiceExceptionHandler {
+@RequiredArgsConstructor
+public class ApplicationExceptionHandler {
     private void logError(Exception ex, WebRequest request) {
         log.error(
                 "An error happened while calling {} API: {}",
@@ -21,10 +23,12 @@ public class MessangerServiceExceptionHandler {
         );
     }
 
-    @ExceptionHandler({MessangerServiceException.class})
-    public ResponseEntity<Object> handleMessangerServiceException(MessangerServiceException ex, WebRequest request) {
+    @ExceptionHandler({ApplicationException.class})
+    public ResponseEntity<Object> handleApplicationException(ApplicationException ex, WebRequest request) {
         logError(ex, request);
-        return ResponseEntity.unprocessableEntity().build();
+        return ResponseEntity
+                .status(401)
+                .body(ex.getMessage());
     }
 
     @ExceptionHandler({EmptyFieldException.class})

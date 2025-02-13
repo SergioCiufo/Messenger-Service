@@ -6,10 +6,9 @@ import com.example.messageService.generated.application.model.RetrieveUsers200Re
 import com.example.messageService.generated.application.model.SendMessage200Response;
 import com.example.messageService.generated.application.model.SendMessageRequest;
 import com.example.messageservice.application.mapper.MessangerMappers;
-import com.example.messageservice.domain.model.messanger.FirstStepGetMessageResponse;
-import com.example.messageservice.domain.model.messanger.FirstStepGetUsersResponse;
-import com.example.messageservice.domain.model.messanger.FirstStepSendMessageRequest;
-import com.example.messageservice.domain.model.messanger.FirstStepSendMessageResponse;
+import com.example.messageservice.domain.model.messanger.GetMessageResponse;
+import com.example.messageservice.domain.model.messanger.GetUsersResponse;
+import com.example.messageservice.domain.model.messanger.SendMessageResponse;
 import com.example.messageservice.domain.service.MessangerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +25,7 @@ public class ServizioMessaggisticaApiDelegateImpl implements ServizioMessaggisti
 
     @Override
     public ResponseEntity<List<RetrieveMessages200ResponseInner>> retrieveMessages() {
-        List<FirstStepGetMessageResponse> response = messangerService.getMessageFirstStep();
+        List<GetMessageResponse> response = messangerService.getMessageFirstStep();
         List<RetrieveMessages200ResponseInner> messages = response.stream()
                 .map(messangerMappers::convertFromDomain)
                 .toList();
@@ -35,7 +34,7 @@ public class ServizioMessaggisticaApiDelegateImpl implements ServizioMessaggisti
 
     @Override
     public ResponseEntity<List<RetrieveUsers200ResponseInner>> retrieveUsers() {
-        List<FirstStepGetUsersResponse> response = messangerService.getUsersFirstStep();
+        List<GetUsersResponse> response = messangerService.getUsersFirstStep();
         List<RetrieveUsers200ResponseInner> users = response.stream()
                 .map(messangerMappers::convertFromDomain)
                 .toList();
@@ -44,8 +43,8 @@ public class ServizioMessaggisticaApiDelegateImpl implements ServizioMessaggisti
 
     @Override
     public ResponseEntity <SendMessage200Response> sendMessage(SendMessageRequest sendMessageRequest){
-        FirstStepSendMessageRequest request = messangerMappers.convertToDomain(sendMessageRequest);
-        FirstStepSendMessageResponse response = messangerService.sendMessageFirstStep(request);
+        com.example.messageservice.domain.model.messanger.SendMessageRequest request = messangerMappers.convertToDomain(sendMessageRequest);
+        SendMessageResponse response = messangerService.sendMessageFirstStep(request);
         SendMessage200Response convertedResponse = messangerMappers.convertFromDomain(response);
         return ResponseEntity.ok(convertedResponse);
     }

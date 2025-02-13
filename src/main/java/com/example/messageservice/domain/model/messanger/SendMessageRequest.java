@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class FirstStepSendMessageRequest {
+public class SendMessageRequest {
     private String usernameSender;
     private String usernameReceiver;
     private String content;

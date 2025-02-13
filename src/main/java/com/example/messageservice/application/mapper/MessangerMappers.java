@@ -4,10 +4,9 @@ import com.example.messageService.generated.application.model.RetrieveMessages20
 import com.example.messageService.generated.application.model.RetrieveUsers200ResponseInner;
 import com.example.messageService.generated.application.model.SendMessage200Response;
 import com.example.messageService.generated.application.model.SendMessageRequest;
-import com.example.messageservice.domain.model.messanger.FirstStepGetMessageResponse;
-import com.example.messageservice.domain.model.messanger.FirstStepGetUsersResponse;
-import com.example.messageservice.domain.model.messanger.FirstStepSendMessageRequest;
-import com.example.messageservice.domain.model.messanger.FirstStepSendMessageResponse;
+import com.example.messageservice.domain.model.messanger.GetMessageResponse;
+import com.example.messageservice.domain.model.messanger.GetUsersResponse;
+import com.example.messageservice.domain.model.messanger.SendMessageResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -22,7 +21,7 @@ public interface MessangerMappers {
     @Mapping(target = "usernameReceiver", source = "response.username_receiver")
     @Mapping(target = "createdAt", source = "response.createdAt", qualifiedByName = "stringToOffsetDateTime")
     @Mapping(target= "isRead", source = "response.isRead")
-    RetrieveMessages200ResponseInner convertFromDomain(FirstStepGetMessageResponse response);
+    RetrieveMessages200ResponseInner convertFromDomain(GetMessageResponse response);
 
     //metodo per convertire la stringa della data ricevuta in OffSetDateTime
     @Named("stringToOffsetDateTime")
@@ -33,11 +32,11 @@ public interface MessangerMappers {
     //GETUSERS
     @Mapping(target = "idUser", source = "response.idUser")
     @Mapping(target = "username", source = "response.username")
-    RetrieveUsers200ResponseInner convertFromDomain(FirstStepGetUsersResponse response);
+    RetrieveUsers200ResponseInner convertFromDomain(GetUsersResponse response);
 
     //SENDMESSAGE
-    FirstStepSendMessageRequest convertToDomain(SendMessageRequest request);
-    SendMessage200Response convertFromDomain(FirstStepSendMessageResponse response);
+    com.example.messageservice.domain.model.messanger.SendMessageRequest convertToDomain(SendMessageRequest request);
+    SendMessage200Response convertFromDomain(SendMessageResponse response);
 
 
 

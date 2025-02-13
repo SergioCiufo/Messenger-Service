@@ -3,10 +3,10 @@ package com.example.messageservice.domain.service.impl;
 import com.example.messageservice.domain.exception.EmptyFieldException;
 import com.example.messageservice.domain.model.Message;
 import com.example.messageservice.domain.model.User;
-import com.example.messageservice.domain.model.messanger.FirstStepGetMessageResponse;
-import com.example.messageservice.domain.model.messanger.FirstStepGetUsersResponse;
-import com.example.messageservice.domain.model.messanger.FirstStepSendMessageRequest;
-import com.example.messageservice.domain.model.messanger.FirstStepSendMessageResponse;
+import com.example.messageservice.domain.model.messanger.GetMessageResponse;
+import com.example.messageservice.domain.model.messanger.GetUsersResponse;
+import com.example.messageservice.domain.model.messanger.SendMessageRequest;
+import com.example.messageservice.domain.model.messanger.SendMessageResponse;
 import com.example.messageservice.domain.service.MessangerService;
 import com.example.messageservice.domain.service.MessagesService;
 import com.example.messageservice.domain.service.SendMessageService;
@@ -29,7 +29,7 @@ public class MessangerServiceImpl implements MessangerService {
     private final SendMessageService sendMessageService;
 
     @Override
-    public List<FirstStepGetMessageResponse> getMessageFirstStep() {
+    public List<GetMessageResponse> getMessageFirstStep() {
         String username = "test"; //provvisorio
         //cercare l'utente by username dalla lista utenti
         //se corrisponde usare l'id utente per trovare la lista messaggi dedicata
@@ -40,8 +40,8 @@ public class MessangerServiceImpl implements MessangerService {
 
         List<Message> messagesList = messagesService.getMessagesList(username);
 
-        List<FirstStepGetMessageResponse> responseList = messagesList.stream()
-                .map(message -> FirstStepGetMessageResponse.builder()
+        List<GetMessageResponse> responseList = messagesList.stream()
+                .map(message -> GetMessageResponse.builder()
                         .id(String.valueOf(message.getId()))
                         .content(message.getContent())
                         .username_sender(message.getUserSender().getUsername())
@@ -55,11 +55,11 @@ public class MessangerServiceImpl implements MessangerService {
     }
 
     @Override
-    public List<FirstStepGetUsersResponse> getUsersFirstStep() {
+    public List<GetUsersResponse> getUsersFirstStep() {
         List<User> usersList = userService.getUsersList();
 
-        List<FirstStepGetUsersResponse> responseList = usersList.stream()
-                .map(user -> FirstStepGetUsersResponse.builder()
+        List<GetUsersResponse> responseList = usersList.stream()
+                .map(user -> GetUsersResponse.builder()
                         .idUser(String.valueOf(user.getId()))
                         .username(user.getUsername())
                         .build())
@@ -69,7 +69,7 @@ public class MessangerServiceImpl implements MessangerService {
     }
 
     @Override
-    public FirstStepSendMessageResponse sendMessageFirstStep(FirstStepSendMessageRequest request) {
+    public SendMessageResponse sendMessageFirstStep(SendMessageRequest request) {
         String sender = request.getUsernameSender();
         String receiver = request.getUsernameReceiver();
         String content = request.getContent();
@@ -81,7 +81,7 @@ public class MessangerServiceImpl implements MessangerService {
 
         sendMessageService.sendMessage(sender, receiver, content);
 
-        return FirstStepSendMessageResponse.builder()
+        return SendMessageResponse.builder()
                 .message("Messaggio inviato")
                 .build();
     }
