@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: MessageService
+  datasource:
+    url: jdbc:oracle:thin:@localhost:1521:orcl
+    username: C##MESSAGESERVICE
+    password: root
+    driver-class-name: oracle.jdbc.OracleDriver
+  jpa:
+    hibernate:
+      ddl-auto: create
+    database-platform: org.hibernate.dialect.OracleDialect
+server:
+  port: 8081

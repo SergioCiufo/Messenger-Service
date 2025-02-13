@@ -25,7 +25,7 @@ public class ServizioMessaggisticaApiDelegateImpl implements ServizioMessaggisti
 
     @Override
     public ResponseEntity<List<RetrieveMessages200ResponseInner>> retrieveMessages() {
-        List<GetMessageResponse> response = messangerService.getMessageFirstStep();
+        List<GetMessageResponse> response = messangerService.getMessage();
         List<RetrieveMessages200ResponseInner> messages = response.stream()
                 .map(messangerMappers::convertFromDomain)
                 .toList();
@@ -34,7 +34,7 @@ public class ServizioMessaggisticaApiDelegateImpl implements ServizioMessaggisti
 
     @Override
     public ResponseEntity<List<RetrieveUsers200ResponseInner>> retrieveUsers() {
-        List<GetUsersResponse> response = messangerService.getUsersFirstStep();
+        List<GetUsersResponse> response = messangerService.getUsers();
         List<RetrieveUsers200ResponseInner> users = response.stream()
                 .map(messangerMappers::convertFromDomain)
                 .toList();
@@ -44,7 +44,7 @@ public class ServizioMessaggisticaApiDelegateImpl implements ServizioMessaggisti
     @Override
     public ResponseEntity <SendMessage200Response> sendMessage(SendMessageRequest sendMessageRequest){
         com.example.messageservice.domain.model.messanger.SendMessageRequest request = messangerMappers.convertToDomain(sendMessageRequest);
-        SendMessageResponse response = messangerService.sendMessageFirstStep(request);
+        SendMessageResponse response = messangerService.sendMessage(request);
         SendMessage200Response convertedResponse = messangerMappers.convertFromDomain(response);
         return ResponseEntity.ok(convertedResponse);
     }

@@ -8,13 +8,11 @@ import com.example.messageservice.domain.model.messanger.GetUsersResponse;
 import com.example.messageservice.domain.model.messanger.SendMessageRequest;
 import com.example.messageservice.domain.model.messanger.SendMessageResponse;
 import com.example.messageservice.domain.service.MessangerService;
-import com.example.messageservice.domain.service.MessagesService;
-import com.example.messageservice.domain.service.SendMessageService;
-import com.example.messageservice.domain.service.UserService;
 import com.example.messageservice.domain.utill.LocalDateTimeUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -26,19 +24,15 @@ public class MessangerServiceImpl implements MessangerService {
     private final MessagesService messagesService;
     private final LocalDateTimeUtil localDateTimeUtil;
     private final UserService userService;
-    private final SendMessageService sendMessageService;
 
     @Override
-    public List<GetMessageResponse> getMessageFirstStep() {
-        String username = "test"; //provvisorio
-        //cercare l'utente by username dalla lista utenti
-        //se corrisponde usare l'id utente per trovare la lista messaggi dedicata
-        if(username == null) {
-            log.error("Username is null");
-            throw new IllegalArgumentException("Username is null");
-        }
+    @Transactional
+    public List<GetMessageResponse> getMessage() {
+        //test
+        String username = "sergio";
 
-        List<Message> messagesList = messagesService.getMessagesList(username);
+        User user = userService.getUserByUsername(username);
+        List<Message> messagesList = messagesService.getMessages(user);
 
         List<GetMessageResponse> responseList = messagesList.stream()
                 .map(message -> GetMessageResponse.builder()
@@ -55,8 +49,13 @@ public class MessangerServiceImpl implements MessangerService {
     }
 
     @Override
-    public List<GetUsersResponse> getUsersFirstStep() {
-        List<User> usersList = userService.getUsersList();
+    @Transactional
+    public List<GetUsersResponse> getUsers() {
+        //test
+        String username = "sergio";
+
+        User userClient = userService.getUserByUsername(username);
+        List<User> usersList = userService.getAllUsersExceptUser(userClient);
 
         List<GetUsersResponse> responseList = usersList.stream()
                 .map(user -> GetUsersResponse.builder()
@@ -69,17 +68,21 @@ public class MessangerServiceImpl implements MessangerService {
     }
 
     @Override
-    public SendMessageResponse sendMessageFirstStep(SendMessageRequest request) {
-        String sender = request.getUsernameSender();
-        String receiver = request.getUsernameReceiver();
+    @Transactional
+    public SendMessageResponse sendMessage(SendMessageRequest request) {
+        String usernameSender = request.getUsernameSender();
+        String usernameReceiver = request.getUsernameReceiver();
         String content = request.getContent();
 
-        String nullCheck = messagesService.checkNull(sender, receiver, content);
+        String nullCheck = messagesService.checkNull(usernameSender, usernameReceiver, content);
         if(!nullCheck.isEmpty()) {
             throw new EmptyFieldException("Campo/i vuoti: " + nullCheck);
         }
 
-        sendMessageService.sendMessage(sender, receiver, content);
+        User sender = userService.getUserByUsername(usernameSender);
+        User receiver  = userService.getUserByUsername(usernameReceiver);
+
+        messagesService.sendMessage(sender, receiver, content);
 
         return SendMessageResponse.builder()
                 .message("Messaggio inviato")

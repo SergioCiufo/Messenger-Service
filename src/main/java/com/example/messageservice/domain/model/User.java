@@ -1,5 +1,6 @@
 package com.example.messageservice.domain.model;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,17 +12,19 @@ import java.util.List;
 @Builder(toBuilder = true) //interfaccia differente e fluida per settare parametri //tobuilder da una classe di creare il builder
 @AllArgsConstructor //costruttore con tutti i parametri
 @NoArgsConstructor //costruttore vuoto
-//@Entity
-//@Table(name = "User")
+@Entity
+@Table(name = "Users", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "username")
+})
 public class User {
-//    @Id
-//    @GeneratedValue(Strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
     private String username;
 
-//    @OneToMany(mappedBy = "userSender", cascade = CascadeType.All)
+    @OneToMany(mappedBy = "userSender", cascade = CascadeType.ALL)
     private List<Message> sentMessages;
-//    @OneToMany(mappedBy = "userReceived", cascade = CascadeType.All)
+    @OneToMany(mappedBy = "userReceiver", cascade = CascadeType.ALL)
     private List<Message> receivedMessages;
 }
