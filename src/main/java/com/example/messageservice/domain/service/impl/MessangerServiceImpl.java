@@ -5,8 +5,8 @@ import com.example.messageservice.domain.model.Message;
 import com.example.messageservice.domain.model.User;
 import com.example.messageservice.domain.model.messanger.GetMessageResponse;
 import com.example.messageservice.domain.model.messanger.GetUsersResponse;
-import com.example.messageservice.domain.model.messanger.SendMessageRequest;
-import com.example.messageservice.domain.model.messanger.SendMessageResponse;
+import com.example.messageservice.domain.model.messanger.PostMessageRequest;
+import com.example.messageservice.domain.model.messanger.PostMessageResponse;
 import com.example.messageservice.domain.service.MessangerService;
 import com.example.messageservice.domain.utill.LocalDateTimeUtil;
 import lombok.AllArgsConstructor;
@@ -27,9 +27,8 @@ public class MessangerServiceImpl implements MessangerService {
 
     @Override
     @Transactional
-    public List<GetMessageResponse> getMessage() {
-        //test
-        String username = "sergio";
+    public List<GetMessageResponse> getMessage(User userAuth) {
+        String username = userAuth.getUsername();
 
         User user = userService.getUserByUsername(username);
         List<Message> messagesList = messagesService.getMessages(user);
@@ -50,9 +49,8 @@ public class MessangerServiceImpl implements MessangerService {
 
     @Override
     @Transactional
-    public List<GetUsersResponse> getUsers() {
-        //test
-        String username = "sergio";
+    public List<GetUsersResponse> getUsers(User userAuth) {
+        String username = userAuth.getUsername();
 
         User userClient = userService.getUserByUsername(username);
         List<User> usersList = userService.getAllUsersExceptUser(userClient);
@@ -69,8 +67,9 @@ public class MessangerServiceImpl implements MessangerService {
 
     @Override
     @Transactional
-    public SendMessageResponse sendMessage(SendMessageRequest request) {
-        String usernameSender = request.getUsernameSender();
+    public PostMessageResponse sendMessage(PostMessageRequest request, User userAuth) {
+        String usernameSender = userAuth.getUsername();
+        //String usernameSender = request.getUsernameSender();
         String usernameReceiver = request.getUsernameReceiver();
         String content = request.getContent();
 
@@ -84,7 +83,7 @@ public class MessangerServiceImpl implements MessangerService {
 
         messagesService.sendMessage(sender, receiver, content);
 
-        return SendMessageResponse.builder()
+        return PostMessageResponse.builder()
                 .message("Messaggio inviato")
                 .build();
     }

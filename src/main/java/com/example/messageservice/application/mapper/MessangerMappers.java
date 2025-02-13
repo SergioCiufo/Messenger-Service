@@ -6,7 +6,8 @@ import com.example.messageService.generated.application.model.SendMessage200Resp
 import com.example.messageService.generated.application.model.SendMessageRequest;
 import com.example.messageservice.domain.model.messanger.GetMessageResponse;
 import com.example.messageservice.domain.model.messanger.GetUsersResponse;
-import com.example.messageservice.domain.model.messanger.SendMessageResponse;
+import com.example.messageservice.domain.model.messanger.PostMessageRequest;
+import com.example.messageservice.domain.model.messanger.PostMessageResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -35,8 +36,8 @@ public interface MessangerMappers {
     RetrieveUsers200ResponseInner convertFromDomain(GetUsersResponse response);
 
     //SENDMESSAGE
-    com.example.messageservice.domain.model.messanger.SendMessageRequest convertToDomain(SendMessageRequest request);
-    SendMessage200Response convertFromDomain(SendMessageResponse response);
+    PostMessageRequest convertToDomain(SendMessageRequest request);
+    SendMessage200Response convertFromDomain(PostMessageResponse response);
 
 
 

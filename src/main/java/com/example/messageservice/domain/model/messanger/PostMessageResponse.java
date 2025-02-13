@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class SendMessageResponse {
+public class PostMessageResponse {
     private String message;
 }

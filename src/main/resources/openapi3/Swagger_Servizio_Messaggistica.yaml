@@ -27,7 +27,7 @@ paths:
       tags:
         - Servizio Messaggistica
       summary: Recupero lista messaggi
-      description: Recupera la lista dei messaggi con "userId"
+      description: Recupera la lista dei messaggi con "username"
       operationId: retrieveMessages
       security: #Richiamiamo il bearerAuth del component security
       - bearerAuth: []
