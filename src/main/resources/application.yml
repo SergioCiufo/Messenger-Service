@@ -1,4 +1,19 @@
 spring:
+  cloud:
+    openfeign:
+      httpclient:
+        hc5:
+          enabled: true
+      client:
+        rest:
+          auth-service:
+            url: http://localhost:8080
+            api:
+              verify-token: /verify-token
+        config:
+          auth-serviceFeign:
+            default-request-headers:
+              content-type: application/json
   application:
     name: MessageService
   datasource:

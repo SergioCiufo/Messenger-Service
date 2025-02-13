@@ -67,9 +67,8 @@
         </dependency>
 
         <!-- Spring Boot Starter Security anche per il filtro -->
-<!--
 
-<dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
@@ -79,9 +78,15 @@
             <artifactId>spring-security-web</artifactId>
         </dependency>
 
--->
 
         <!-- -->
+
+        <!-- Feign -->
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
 
         <!-- dipendenza integra jpa ed hibernate-->
         <dependency>

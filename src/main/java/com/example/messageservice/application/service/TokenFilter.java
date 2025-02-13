@@ -1,5 +1,6 @@
 package com.example.messageservice.application.service;
-/*
+
+import com.example.messageservice.domain.model.User;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -8,18 +9,17 @@ import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Collections;
 
-@Component
+@Service
 @AllArgsConstructor
 @Log4j2
 public class TokenFilter extends OncePerRequestFilter {
 
-    private final AuthServiceAdapter authServiceAdapter;
+    private final AuthServiceFeignImpl authServiceFeignImpl;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -32,18 +32,22 @@ public class TokenFilter extends OncePerRequestFilter {
         }
 
         String token = authHeader.substring(7);
-        String username = authServiceAdapter.validateToken(token);
+        User user = authServiceFeignImpl.verifyToken(token);
 
-        if (username == null) {
+        if (user.getUsername() == null) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             log.error("Utente non valido");
             return;
         }
-
+        log.info("Token valido");
         //incapsuliamo i dati all'interno di questa funzione di springSecurity (al momento è anche troppo dato che stiamo passando una stringa)
+//        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+//                username, null, Collections.emptyList()
+//        );
+
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                username, null, Collections.emptyList()
-        );
+                //utente //credenziali //ruolo
+                user, null, null);
 
         //conserviamo le informazioni dell'utente autenticato, così spring security sa che l'utente è autenticato e che può effetturare le operazioni
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -52,5 +56,3 @@ public class TokenFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 }
-
- */
