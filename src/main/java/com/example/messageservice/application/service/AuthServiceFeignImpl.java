@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 @Log4j2
@@ -15,5 +17,14 @@ public class AuthServiceFeignImpl {
     public User verifyToken(String token) {
         User user = authServiceFeign.verifyToken("Bearer " + token);
         return user;
+    }
+
+    public List<User> getUsers() {
+        List<Object> users = authServiceFeign.getUsers();
+        log.info(users);
+        // Effettua il cast della lista
+        List<User> userList = (List<User>) (List<?>) users; // Cast generico per evitare il tipo Object
+        //return authServiceFeign.getUsers();
+        return userList;
     }
 }

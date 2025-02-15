@@ -5,7 +5,9 @@ import com.example.messageService.generated.application.model.RetrieveMessages20
 import com.example.messageService.generated.application.model.RetrieveUsers200ResponseInner;
 import com.example.messageService.generated.application.model.SendMessage200Response;
 import com.example.messageService.generated.application.model.SendMessageRequest;
+import com.example.messageservice.application.api.feign.AuthServiceFeign;
 import com.example.messageservice.application.mapper.MessangerMappers;
+import com.example.messageservice.application.service.AuthServiceFeignImpl;
 import com.example.messageservice.application.util.AuthenticationUserUtil;
 import com.example.messageservice.domain.model.User;
 import com.example.messageservice.domain.model.messanger.GetMessageResponse;
@@ -14,6 +16,7 @@ import com.example.messageservice.domain.model.messanger.PostMessageRequest;
 import com.example.messageservice.domain.model.messanger.PostMessageResponse;
 import com.example.messageservice.domain.service.MessangerService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,11 +24,13 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
+@Slf4j
 public class ServizioMessaggisticaApiDelegateImpl implements ServizioMessaggisticaApiDelegate {
 
     private final MessangerMappers messangerMappers;
     private final MessangerService messangerService;
     private final AuthenticationUserUtil authenticationUserUtil;
+    private final AuthServiceFeignImpl authServiceFeignImpl;
 
     @Override
     public ResponseEntity<List<RetrieveMessages200ResponseInner>> retrieveMessages() {
@@ -40,7 +45,10 @@ public class ServizioMessaggisticaApiDelegateImpl implements ServizioMessaggisti
     @Override
     public ResponseEntity<List<RetrieveUsers200ResponseInner>> retrieveUsers() {
         User userAuth =authenticationUserUtil.getUserAuth();
-        List<GetUsersResponse> response = messangerService.getUsers(userAuth);
+        List<User> userList = authServiceFeignImpl.getUsers();
+        log.info(userList.toString());
+        //List<GetUsersResponse> response = messangerService.getUsers(userAuth);
+        List<GetUsersResponse> response = messangerService.getUsers(userList, userAuth);
         List<RetrieveUsers200ResponseInner> users = response.stream()
                 .map(messangerMappers::convertFromDomain)
                 .toList();

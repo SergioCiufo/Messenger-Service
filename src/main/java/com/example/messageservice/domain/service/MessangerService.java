@@ -12,7 +12,8 @@ public interface MessangerService {
 
     public List<GetMessageResponse> getMessage(User userAuth);
 
-    public List<GetUsersResponse> getUsers(User user);
+    //public List<GetUsersResponse> getUsers(User user);
+    public List<GetUsersResponse> getUsers(List<User> userList, User userAuth);
 
     public PostMessageResponse sendMessage(PostMessageRequest request, User userAuth);
 }

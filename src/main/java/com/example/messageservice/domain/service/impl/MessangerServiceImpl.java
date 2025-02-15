@@ -1,6 +1,7 @@
 package com.example.messageservice.domain.service.impl;
 
 import com.example.messageservice.domain.exception.EmptyFieldException;
+import com.example.messageservice.domain.exception.NotFoundException;
 import com.example.messageservice.domain.model.Message;
 import com.example.messageservice.domain.model.User;
 import com.example.messageservice.domain.model.messanger.GetMessageResponse;
@@ -14,6 +15,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -49,20 +51,32 @@ public class MessangerServiceImpl implements MessangerService {
 
     @Override
     @Transactional
-    public List<GetUsersResponse> getUsers(User userAuth) {
-        String username = userAuth.getUsername();
+    public List<GetUsersResponse> getUsers(List<User> userList ,User userAuth) {
+        if(userList.contains(userAuth)) {
+            userList.remove(userAuth);
 
-        User userClient = userService.getUserByUsername(username);
-        List<User> usersList = userService.getAllUsersExceptUser(userClient);
-
-        List<GetUsersResponse> responseList = usersList.stream()
-                .map(user -> GetUsersResponse.builder()
-                        .idUser(String.valueOf(user.getId()))
-                        .username(user.getUsername())
-                        .build())
-                .toList();
-
-        return responseList;
+            List<GetUsersResponse> responseList = userList.stream()
+                    .map(user -> GetUsersResponse.builder()
+                            .idUser(String.valueOf(user.getId()))
+                            .username(user.getUsername())
+                            .build())
+                    .toList();
+            return responseList;
+        }
+        throw new NotFoundException("l'utente non esiste nella lista, impossibile");
+//        String username = userAuth.getUsername();
+//
+//        User userClient = userService.getUserByUsername(username);
+//        List<User> usersList = userService.getAllUsersExceptUser(userClient);
+//
+//        List<GetUsersResponse> responseList = usersList.stream()
+//                .map(user -> GetUsersResponse.builder()
+//                        .idUser(String.valueOf(user.getId()))
+//                        .username(user.getUsername())
+//                        .build())
+//                .toList();
+//
+//        return responseList;
     }
 
     @Override
