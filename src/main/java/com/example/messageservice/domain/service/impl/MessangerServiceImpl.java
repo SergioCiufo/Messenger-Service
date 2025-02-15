@@ -15,7 +15,6 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -25,16 +24,10 @@ public class MessangerServiceImpl implements MessangerService {
 
     private final MessagesService messagesService;
     private final LocalDateTimeUtil localDateTimeUtil;
-    //private final UserService userService;
 
     @Override
     @Transactional
     public List<GetMessageResponse> getMessage(User userAuth, List<User> userList) {
-
-//          OLD
-//        String username = userAuth.getUsername();
-//        User user = userService.getUserByUsername(username);
-//        List<Message> messagesList = messagesService.getMessages(user);
 
         userList.stream()
                 .filter(user -> user.getUsername().equals(userAuth.getUsername()))
@@ -47,9 +40,7 @@ public class MessangerServiceImpl implements MessangerService {
                 .map(message -> GetMessageResponse.builder()
                         .id(String.valueOf(message.getId()))
                         .content(message.getContent())
-                        //.username_sender(message.getUserSender().getUsername())
                         .username_sender(message.getUserSender())
-                        //.username_receiver(message.getUserReceiver().getUsername())
                         .username_receiver(message.getUserReceiver())
                         .createdAt(localDateTimeUtil.formatCreatedAt(message.getCreatedAt()))
                         .isRead(message.getIsRead())
@@ -78,20 +69,6 @@ public class MessangerServiceImpl implements MessangerService {
                     .toList();
             return responseList;
 
-//            OLD
-//        String username = userAuth.getUsername();
-//
-//        User userClient = userService.getUserByUsername(username);
-//        List<User> usersList = userService.getAllUsersExceptUser(userClient);
-//
-//        List<GetUsersResponse> responseList = usersList.stream()
-//                .map(user -> GetUsersResponse.builder()
-//                        .idUser(String.valueOf(user.getId()))
-//                        .username(user.getUsername())
-//                        .build())
-//                .toList();
-//
-//        return responseList;
     }
 
 
@@ -122,27 +99,6 @@ public class MessangerServiceImpl implements MessangerService {
         return PostMessageResponse.builder()
                 .message("Messaggio inviato")
                 .build();
-
-//        OLD
-//        String usernameSender = userAuth.getUsername();
-//        //String usernameSender = request.getUsernameSender();
-//        String usernameReceiver = request.getUsernameReceiver();
-//        String content = request.getContent();
-//
-//        String nullCheck = messagesService.checkNull(usernameSender, usernameReceiver, content);
-//        if(!nullCheck.isEmpty()) {
-//            throw new EmptyFieldException("Campo/i vuoti: " + nullCheck);
-//        }
-//
-//        User sender = userService.getUserByUsername(usernameSender);
-//        User receiver  = userService.getUserByUsername(usernameReceiver);
-//
-//        messagesService.sendMessage(sender, receiver, content);
-//
-//        return PostMessageResponse.builder()
-//                .message("Messaggio inviato")
-//                .build();
     }
-
 
 }
