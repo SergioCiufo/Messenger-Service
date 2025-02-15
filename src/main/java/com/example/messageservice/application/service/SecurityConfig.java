@@ -33,20 +33,4 @@ public class SecurityConfig {
 
         return http.build();
     }
-/*
-    //sta roba è cursata male
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Collections.singletonList("*")); // Consente tutte le origini
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Metodi HTTP consentiti
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "*")); // Intestazioni consentite
-        configuration.setAllowCredentials(true);  // Consente le credenziali
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);  // Applica CORS a tutte le rotte
-        return source;
-    }
-
- */
 }
