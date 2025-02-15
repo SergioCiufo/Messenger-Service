@@ -25,13 +25,15 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class)
-                .authorizeHttpRequests()
+                .authorizeRequests()
                 .anyRequest().authenticated()
                 .and()
-                .cors();  // Abilita CORS
+                .cors().and()
+                .csrf().disable(); //così le chiamate in post funzionano, ma è errato poiché noi lavoriamo con un cookie. bisogna settarlo meglio.
+
         return http.build();
     }
-
+/*
     //sta roba è cursata male
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
@@ -45,4 +47,6 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", configuration);  // Applica CORS a tutte le rotte
         return source;
     }
+
+ */
 }
