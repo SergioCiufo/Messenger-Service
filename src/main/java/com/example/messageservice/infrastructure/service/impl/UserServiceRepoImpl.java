@@ -1,3 +1,4 @@
+/*
 package com.example.messageservice.infrastructure.service.impl;
 
 import com.example.messageservice.domain.api.UserServiceRepo;
@@ -24,3 +25,4 @@ public class UserServiceRepoImpl implements UserServiceRepo {
         return userRepository.findByUsernameNotIgnoreCase(user.getUsername());
     }
 }
+*/

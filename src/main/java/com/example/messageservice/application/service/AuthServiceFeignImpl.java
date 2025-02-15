@@ -20,11 +20,6 @@ public class AuthServiceFeignImpl {
     }
 
     public List<User> getUsers() {
-        List<Object> users = authServiceFeign.getUsers();
-        log.info(users);
-        // Effettua il cast della lista
-        List<User> userList = (List<User>) (List<?>) users; // Cast generico per evitare il tipo Object
-        //return authServiceFeign.getUsers();
-        return userList;
+        return authServiceFeign.getUsers();
     }
 }

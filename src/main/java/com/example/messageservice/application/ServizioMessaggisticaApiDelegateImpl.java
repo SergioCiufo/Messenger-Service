@@ -34,8 +34,9 @@ public class ServizioMessaggisticaApiDelegateImpl implements ServizioMessaggisti
 
     @Override
     public ResponseEntity<List<RetrieveMessages200ResponseInner>> retrieveMessages() {
+        List<User> userList = authServiceFeignImpl.getUsers();
         User userAuth =authenticationUserUtil.getUserAuth();
-        List<GetMessageResponse> response = messangerService.getMessage(userAuth);
+        List<GetMessageResponse> response = messangerService.getMessage(userAuth, userList);
         List<RetrieveMessages200ResponseInner> messages = response.stream()
                 .map(messangerMappers::convertFromDomain)
                 .toList();
@@ -57,9 +58,10 @@ public class ServizioMessaggisticaApiDelegateImpl implements ServizioMessaggisti
 
     @Override
     public ResponseEntity <SendMessage200Response> sendMessage(SendMessageRequest sendMessageRequest){
+        List<User> userList = authServiceFeignImpl.getUsers();
         User userAuth =authenticationUserUtil.getUserAuth();
         PostMessageRequest request = messangerMappers.convertToDomain(sendMessageRequest);
-        PostMessageResponse response = messangerService.sendMessage(request, userAuth);
+        PostMessageResponse response = messangerService.sendMessage(request, userAuth, userList);
         SendMessage200Response convertedResponse = messangerMappers.convertFromDomain(response);
         return ResponseEntity.ok(convertedResponse);
     }

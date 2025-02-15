@@ -21,5 +21,5 @@ public interface AuthServiceFeign {
     //ci prendiamo la lista utenti
     @GetMapping(value = "${spring.cloud.openfeign.client.rest.auth-service.api.username-list}",
             produces = MediaType.APPLICATION_JSON_VALUE) //non ha bisogno di consumes perché non ha un corpo da inviare
-    List<Object> getUsers();
+    List<User> getUsers();
 }

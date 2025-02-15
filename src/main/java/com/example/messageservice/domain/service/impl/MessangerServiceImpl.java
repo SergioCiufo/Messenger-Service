@@ -25,22 +25,32 @@ public class MessangerServiceImpl implements MessangerService {
 
     private final MessagesService messagesService;
     private final LocalDateTimeUtil localDateTimeUtil;
-    private final UserService userService;
+    //private final UserService userService;
 
     @Override
     @Transactional
-    public List<GetMessageResponse> getMessage(User userAuth) {
-        String username = userAuth.getUsername();
+    public List<GetMessageResponse> getMessage(User userAuth, List<User> userList) {
 
-        User user = userService.getUserByUsername(username);
-        List<Message> messagesList = messagesService.getMessages(user);
+//          OLD
+//        String username = userAuth.getUsername();
+//        User user = userService.getUserByUsername(username);
+//        List<Message> messagesList = messagesService.getMessages(user);
+
+        userList.stream()
+                .filter(user -> user.getUsername().equals(userAuth.getUsername()))
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException("User not found with username: " + userAuth.getUsername()));
+
+        List<Message> messagesList = messagesService.getMessages(userAuth);
 
         List<GetMessageResponse> responseList = messagesList.stream()
                 .map(message -> GetMessageResponse.builder()
                         .id(String.valueOf(message.getId()))
                         .content(message.getContent())
-                        .username_sender(message.getUserSender().getUsername())
-                        .username_receiver(message.getUserReceiver().getUsername())
+                        //.username_sender(message.getUserSender().getUsername())
+                        .username_sender(message.getUserSender())
+                        //.username_receiver(message.getUserReceiver().getUsername())
+                        .username_receiver(message.getUserReceiver())
                         .createdAt(localDateTimeUtil.formatCreatedAt(message.getCreatedAt()))
                         .isRead(message.getIsRead())
                         .build())
@@ -52,18 +62,23 @@ public class MessangerServiceImpl implements MessangerService {
     @Override
     @Transactional
     public List<GetUsersResponse> getUsers(List<User> userList ,User userAuth) {
-        if(userList.contains(userAuth)) {
-            userList.remove(userAuth);
 
-            List<GetUsersResponse> responseList = userList.stream()
+        User userToRemove = userList.stream()
+                .filter(user -> user.getUsername().equals(userAuth.getUsername()))
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException("User not found with username: " + userAuth.getUsername()));
+
+        userList.remove(userToRemove);
+
+
+        List<GetUsersResponse> responseList = userList.stream()
                     .map(user -> GetUsersResponse.builder()
-                            .idUser(String.valueOf(user.getId()))
                             .username(user.getUsername())
                             .build())
                     .toList();
             return responseList;
-        }
-        throw new NotFoundException("l'utente non esiste nella lista, impossibile");
+
+//            OLD
 //        String username = userAuth.getUsername();
 //
 //        User userClient = userService.getUserByUsername(username);
@@ -79,27 +94,54 @@ public class MessangerServiceImpl implements MessangerService {
 //        return responseList;
     }
 
+
     @Override
     @Transactional
-    public PostMessageResponse sendMessage(PostMessageRequest request, User userAuth) {
-        String usernameSender = userAuth.getUsername();
-        //String usernameSender = request.getUsernameSender();
+    public PostMessageResponse sendMessage(PostMessageRequest request, User userAuth, List<User> userList) {
+        String usernameSender = request.getUsernameSender();
         String usernameReceiver = request.getUsernameReceiver();
         String content = request.getContent();
+
+        userList.stream()
+                .filter(user -> user.getUsername().equals(userAuth.getUsername()))
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException("User not found with username: " + userAuth.getUsername()));
+
+        userList.stream()
+                .filter(user -> user.getUsername().equals(usernameReceiver))
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException("User not found with username: " + usernameReceiver));
 
         String nullCheck = messagesService.checkNull(usernameSender, usernameReceiver, content);
         if(!nullCheck.isEmpty()) {
             throw new EmptyFieldException("Campo/i vuoti: " + nullCheck);
         }
 
-        User sender = userService.getUserByUsername(usernameSender);
-        User receiver  = userService.getUserByUsername(usernameReceiver);
-
-        messagesService.sendMessage(sender, receiver, content);
+        messagesService.sendMessage(usernameSender, usernameReceiver, content);
 
         return PostMessageResponse.builder()
                 .message("Messaggio inviato")
                 .build();
+
+//        OLD
+//        String usernameSender = userAuth.getUsername();
+//        //String usernameSender = request.getUsernameSender();
+//        String usernameReceiver = request.getUsernameReceiver();
+//        String content = request.getContent();
+//
+//        String nullCheck = messagesService.checkNull(usernameSender, usernameReceiver, content);
+//        if(!nullCheck.isEmpty()) {
+//            throw new EmptyFieldException("Campo/i vuoti: " + nullCheck);
+//        }
+//
+//        User sender = userService.getUserByUsername(usernameSender);
+//        User receiver  = userService.getUserByUsername(usernameReceiver);
+//
+//        messagesService.sendMessage(sender, receiver, content);
+//
+//        return PostMessageResponse.builder()
+//                .message("Messaggio inviato")
+//                .build();
     }
 
 

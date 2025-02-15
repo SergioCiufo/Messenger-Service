@@ -1,5 +1,5 @@
 package com.example.messageservice.domain.service.impl;
-
+/*
 import com.example.messageservice.domain.api.UserServiceRepo;
 import com.example.messageservice.domain.exception.NotFoundException;
 import com.example.messageservice.domain.model.User;
@@ -26,3 +26,4 @@ public class UserService {
         return userServiceRepo.findAllUsersExcept(user);
     }
 }
+*/

@@ -16,7 +16,9 @@ public class MessageServiceRepoImpl  implements MessageServiceRepo {
 
     @Override
     public List<Message> getAllMessages(User user) {
-        return messageRepository.getMessagesByUserSender_IdOrUserReceiver_Id(user.getId(), user.getId());
+        //return messageRepository.getMessagesByUserSender_IdOrUserReceiver_Id(user.getId(), user.getId());
+        //return messageRepository.getMessagesBySenderOrReceiver(user.getUsername(), user.getUsername());
+        return messageRepository.findMessagesBySenderAndReceiverIgnoreCase(user.getUsername(), user.getUsername());
     }
 
     @Override

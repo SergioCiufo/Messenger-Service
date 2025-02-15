@@ -1,3 +1,4 @@
+/*
 package com.example.messageservice.infrastructure.repository;
 
 import com.example.messageservice.domain.model.User;
@@ -15,3 +16,4 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     List<User> findByUsernameNotIgnoreCase(String username);
 
 }
+*/

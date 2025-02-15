@@ -19,8 +19,20 @@ public class MessagesService {
     public List<Message> getMessages(User user) {
         return  messageServiceRepo.getAllMessages(user);
     }
-
+/*
     public void sendMessage(User sender, User receiver, String content) {
+        Message message = Message.builder()
+                .content(content)
+                .userSender(sender)
+                .userReceiver(receiver)
+                .createdAt(LocalDateTime.now())
+                .isRead(false)
+                .build();
+
+        messageServiceRepo.sendMessage(message);
+    }
+*/
+    public void sendMessage(String sender, String receiver, String content) {
         Message message = Message.builder()
                 .content(content)
                 .userSender(sender)
