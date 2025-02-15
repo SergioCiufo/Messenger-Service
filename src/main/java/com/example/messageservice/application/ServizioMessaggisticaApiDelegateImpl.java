@@ -1,19 +1,13 @@
 package com.example.messageservice.application;
 
 import com.example.messageService.generated.application.api.ServizioMessaggisticaApiDelegate;
-import com.example.messageService.generated.application.model.RetrieveMessages200ResponseInner;
-import com.example.messageService.generated.application.model.RetrieveUsers200ResponseInner;
-import com.example.messageService.generated.application.model.SendMessage200Response;
-import com.example.messageService.generated.application.model.SendMessageRequest;
+import com.example.messageService.generated.application.model.*;
 import com.example.messageservice.application.api.feign.AuthServiceFeign;
 import com.example.messageservice.application.mapper.MessangerMappers;
 import com.example.messageservice.application.service.AuthServiceFeignImpl;
 import com.example.messageservice.application.util.AuthenticationUserUtil;
 import com.example.messageservice.domain.model.User;
-import com.example.messageservice.domain.model.messanger.GetMessageResponse;
-import com.example.messageservice.domain.model.messanger.GetUsersResponse;
-import com.example.messageservice.domain.model.messanger.PostMessageRequest;
-import com.example.messageservice.domain.model.messanger.PostMessageResponse;
+import com.example.messageservice.domain.model.messanger.*;
 import com.example.messageservice.domain.service.MessangerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -64,5 +58,18 @@ public class ServizioMessaggisticaApiDelegateImpl implements ServizioMessaggisti
         PostMessageResponse response = messangerService.sendMessage(request, userAuth, userList);
         SendMessage200Response convertedResponse = messangerMappers.convertFromDomain(response);
         return ResponseEntity.ok(convertedResponse);
+    }
+
+    @Override
+    public ResponseEntity<List<RetrieveMessages200ResponseInner>> retrieveConversation(RetrieveConversationRequest sendMessageRequest){
+        List<User> userList = authServiceFeignImpl.getUsers();
+        User userAuth =authenticationUserUtil.getUserAuth();
+
+        GetSingleConversationRequest request = messangerMappers.convertToDomain(sendMessageRequest);
+        List<GetSingleConversationResponse> response = messangerService.getSingleConversation(request, userAuth, userList);
+        List<RetrieveMessages200ResponseInner> messages = response.stream()
+                .map(messangerMappers::convertFromDomain)
+                .toList();
+        return ResponseEntity.ok(messages);
     }
 }

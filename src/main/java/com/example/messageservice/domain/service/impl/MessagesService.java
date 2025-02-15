@@ -20,6 +20,10 @@ public class MessagesService {
         return  messageServiceRepo.getAllMessages(user);
     }
 
+    public List<Message> getSingleConversation(User user, String usernameConversation) {
+        return messageServiceRepo.getSingleConversation(user, usernameConversation);
+    }
+
     public void sendMessage(String sender, String receiver, String content) {
         Message message = Message.builder()
                 .content(content)

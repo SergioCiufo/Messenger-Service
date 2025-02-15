@@ -4,10 +4,7 @@ import com.example.messageservice.domain.exception.EmptyFieldException;
 import com.example.messageservice.domain.exception.NotFoundException;
 import com.example.messageservice.domain.model.Message;
 import com.example.messageservice.domain.model.User;
-import com.example.messageservice.domain.model.messanger.GetMessageResponse;
-import com.example.messageservice.domain.model.messanger.GetUsersResponse;
-import com.example.messageservice.domain.model.messanger.PostMessageRequest;
-import com.example.messageservice.domain.model.messanger.PostMessageResponse;
+import com.example.messageservice.domain.model.messanger.*;
 import com.example.messageservice.domain.service.MessangerService;
 import com.example.messageservice.domain.utill.LocalDateTimeUtil;
 import lombok.AllArgsConstructor;
@@ -30,7 +27,7 @@ public class MessangerServiceImpl implements MessangerService {
     public List<GetMessageResponse> getMessage(User userAuth, List<User> userList) {
 
         userList.stream()
-                .filter(user -> user.getUsername().equals(userAuth.getUsername()))
+                .filter(user -> user.getUsername().equalsIgnoreCase(userAuth.getUsername()))
                 .findFirst()
                 .orElseThrow(() -> new NotFoundException("User not found with username: " + userAuth.getUsername()));
 
@@ -55,7 +52,7 @@ public class MessangerServiceImpl implements MessangerService {
     public List<GetUsersResponse> getUsers(List<User> userList ,User userAuth) {
 
         User userToRemove = userList.stream()
-                .filter(user -> user.getUsername().equals(userAuth.getUsername()))
+                .filter(user -> user.getUsername().equalsIgnoreCase(userAuth.getUsername()))
                 .findFirst()
                 .orElseThrow(() -> new NotFoundException("User not found with username: " + userAuth.getUsername()));
 
@@ -80,12 +77,12 @@ public class MessangerServiceImpl implements MessangerService {
         String content = request.getContent();
 
         userList.stream()
-                .filter(user -> user.getUsername().equals(userAuth.getUsername()))
+                .filter(user -> user.getUsername().equalsIgnoreCase(userAuth.getUsername()))
                 .findFirst()
                 .orElseThrow(() -> new NotFoundException("User not found with username: " + userAuth.getUsername()));
 
         userList.stream()
-                .filter(user -> user.getUsername().equals(usernameReceiver))
+                .filter(user -> user.getUsername().equalsIgnoreCase(usernameReceiver))
                 .findFirst()
                 .orElseThrow(() -> new NotFoundException("User not found with username: " + usernameReceiver));
 
@@ -99,6 +96,36 @@ public class MessangerServiceImpl implements MessangerService {
         return PostMessageResponse.builder()
                 .message("Messaggio inviato")
                 .build();
+    }
+
+    @Override
+    public List<GetSingleConversationResponse> getSingleConversation (GetSingleConversationRequest request, User userAuth, List<User> userList) {
+        String usernameConversation = request.getUsernameConversation();
+
+        userList.stream()
+                .filter(user -> user.getUsername().equalsIgnoreCase(userAuth.getUsername()))
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException("User not found with username: " + userAuth.getUsername()));
+
+        userList.stream()
+                .filter(user -> user.getUsername().equalsIgnoreCase(usernameConversation))
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException("User not found with username: " + usernameConversation));
+
+        List<Message> conversation = messagesService.getSingleConversation(userAuth, usernameConversation);
+
+        List<GetSingleConversationResponse> responseList = conversation.stream()
+                .map(message -> GetSingleConversationResponse.builder()
+                        .id(String.valueOf(message.getId()))
+                        .content(message.getContent())
+                        .username_sender(message.getUserSender())
+                        .username_receiver(message.getUserReceiver())
+                        .createdAt(localDateTimeUtil.formatCreatedAt(message.getCreatedAt()))
+                        .isRead(message.getIsRead())
+                        .build())
+                .toList();
+
+    return responseList;
     }
 
 }
