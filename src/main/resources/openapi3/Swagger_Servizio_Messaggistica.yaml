@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-  title: Chat4Me
+  title: Chat4Me - Messenger Service
   description: |
     Chat4Me è un'app di messaggistica basata su microservizi, sviluppata con SpringBoot, progettata per interagire tramite API Rest.
     - Servizio Messaggistica per la lettura/scrittura messaggi
@@ -84,9 +84,6 @@ paths:
                 items:
                   type: object
                   properties:
-                    idUser:
-                      type: integer
-                      example: 1
                     username:
                       type: string
                       example: "Asuka"

@@ -31,7 +31,6 @@ public interface MessangerMappers {
     }
 
     //GETUSERS
-    @Mapping(target = "idUser", source = "response.idUser")
     @Mapping(target = "username", source = "response.username")
     RetrieveUsers200ResponseInner convertFromDomain(GetUsersResponse response);
 
