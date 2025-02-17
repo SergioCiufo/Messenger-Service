@@ -1,5 +1,6 @@
 package com.example.messageservice.application.service;
 
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -9,10 +10,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.stereotype.Service;
 
 @Service
+@AllArgsConstructor
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Autowired
     private TokenFilter tokenFilter;
 
     @Bean
@@ -20,10 +21,13 @@ public class SecurityConfig {
         http
                 .addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
+                .requestMatchers("/message", "/conversation").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .cors().and()
-                .csrf().disable(); //così le chiamate in post funzionano, ma è errato poiché noi lavoriamo con un cookie. bisogna settarlo meglio.
+                .csrf()
+                    .ignoringRequestMatchers("/message", "/conversation")
+                    .and(); //così le chiamate in post funzionano, ma è errato poiché noi lavoriamo con un cookie. bisogna settarlo meglio.
 
         return http.build();
     }
