@@ -25,7 +25,7 @@ public class SecurityConfig {
                 .cors().and()
                 .csrf()
                     .ignoringRequestMatchers("/message", "/conversation")
-                    .and(); //così le chiamate in post funzionano, ma è errato poiché noi lavoriamo con un cookie. bisogna settarlo meglio.
+                    .and();
 
         return http.build();
     }
