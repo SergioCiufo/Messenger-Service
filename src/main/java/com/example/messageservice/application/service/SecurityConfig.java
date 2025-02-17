@@ -21,7 +21,6 @@ public class SecurityConfig {
         http
                 .addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
-                .requestMatchers("/message", "/conversation").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .cors().and()
