@@ -2,7 +2,6 @@ package com.example.messageservice.application;
 
 import com.example.messageService.generated.application.api.ServizioMessaggisticaApiDelegate;
 import com.example.messageService.generated.application.model.*;
-import com.example.messageservice.application.api.feign.AuthServiceFeign;
 import com.example.messageservice.application.mapper.MessangerMappers;
 import com.example.messageservice.application.service.AuthServiceFeignImpl;
 import com.example.messageservice.application.util.AuthenticationUserUtil;
