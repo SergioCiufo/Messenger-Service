@@ -88,18 +88,25 @@
             <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
 
-        <!-- dipendenza integra jpa ed hibernate-->
+        <!-- dipendenza integra jpa ed hibernate
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
-        <!-- -->
+         -->
 
-        <!-- dipendenza oracle db -->
+        <!-- dipendenza oracle db
         <dependency>
             <groupId>com.oracle.database.jdbc</groupId>
             <artifactId>ojdbc8</artifactId>
             <version>19.17.0.0</version>
+        </dependency>
+         -->
+
+        <!-- DIPENDENZA MONGO DB -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-mongodb</artifactId>
         </dependency>
         <!-- -->
 

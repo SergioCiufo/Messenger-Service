@@ -17,11 +17,9 @@ spring:
               content-type: application/json
   application:
     name: MessageService
-  datasource:
-    url: jdbc:oracle:thin:@localhost:1521:orcl
-    username: C##MESSAGESERVICE
-    password: root
-    driver-class-name: oracle.jdbc.OracleDriver
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/MessageService
   jpa:
     hibernate:
       ddl-auto: update
