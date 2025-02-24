@@ -1,6 +1,6 @@
 package com.example.messageservice.infrastructure.service.impl;
 
-import com.example.messageservice.domain.api.MessageServiceRepo;
+import com.example.messageservice.domain.repository.MessageServiceRepo;
 import com.example.messageservice.domain.model.Message;
 import com.example.messageservice.domain.model.User;
 import com.example.messageservice.infrastructure.repository.MessageRepository;

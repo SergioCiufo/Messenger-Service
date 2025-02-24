@@ -1,6 +1,6 @@
 package com.example.messageservice.application.api.feign;
 
-import com.example.messageservice.domain.model.User;
+import com.example.messageservice.application.model.UserDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,10 +16,10 @@ public interface AuthServiceFeign {
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
 //    Object verifyToken(@RequestHeader("Authorization") String token); by nicola
-    User verifyToken(@RequestHeader("Authorization") String token);
+    UserDto verifyToken(@RequestHeader("Authorization") String token);
 
     //ci prendiamo la lista utenti
     @GetMapping(value = "${spring.cloud.openfeign.client.rest.auth-service.api.username-list}",
             produces = MediaType.APPLICATION_JSON_VALUE) //non ha bisogno di consumes perché non ha un corpo da inviare
-    List<User> getUsers();
+    List<UserDto> getUsers();
 }

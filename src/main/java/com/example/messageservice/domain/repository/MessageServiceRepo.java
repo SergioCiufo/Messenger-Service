@@ -1,4 +1,4 @@
-package com.example.messageservice.domain.api;
+package com.example.messageservice.domain.repository;
 
 import com.example.messageservice.domain.model.Message;
 import com.example.messageservice.domain.model.User;
