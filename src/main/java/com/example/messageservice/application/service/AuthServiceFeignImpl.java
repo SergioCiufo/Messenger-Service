@@ -1,6 +1,7 @@
 package com.example.messageservice.application.service;
 
 import com.example.messageservice.application.api.feign.AuthServiceFeign;
+import com.example.messageservice.application.mapper.UserMapper;
 import com.example.messageservice.application.model.UserDto;
 import com.example.messageservice.domain.model.User;
 import lombok.AllArgsConstructor;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 @Log4j2
 public class AuthServiceFeignImpl {
     private final AuthServiceFeign authServiceFeign;
+    private UserMapper userMapper;
 
 //    public User verifyToken(String token) {
 //        User user = authServiceFeign.verifyToken("Bearer " + token);
@@ -28,7 +30,7 @@ public class AuthServiceFeignImpl {
 
     public User verifyToken(String token) {
         UserDto userDto = authServiceFeign.verifyToken("Bearer " + token);
-        return mapToDomain(userDto);
+        return userMapper.mapToDomain(userDto);
     }
 
 //    public List<User> getUsers() {
@@ -37,12 +39,13 @@ public class AuthServiceFeignImpl {
 
     public List<User> getUsers() {
        return authServiceFeign.getUsers().stream()
-               .map(this::mapToDomain)
+               .map(userMapper::mapToDomain)
                .collect(Collectors.toList());
     }
 
-    public User mapToDomain(UserDto userDto) {
-        if(userDto == null) return null;
-        return new User(userDto.getUsername());
-    }
+//     spostato temporaneamente in mapper
+//    public User mapToDomain(UserDto userDto) {
+//        if(userDto == null) return null;
+//        return new User(userDto.getUsername());
+//    }
 }
