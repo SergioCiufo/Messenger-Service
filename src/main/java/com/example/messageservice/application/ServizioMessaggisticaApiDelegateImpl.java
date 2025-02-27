@@ -40,7 +40,6 @@ public class ServizioMessaggisticaApiDelegateImpl implements ServizioMessaggisti
     public ResponseEntity<List<RetrieveUsers200ResponseInner>> retrieveUsers() {
         User userAuth =authenticationUserUtil.getUserAuth();
         List<User> userList = authServiceFeignImpl.getUsers();
-        log.info(userList.toString());
         //List<GetUsersResponse> response = messangerService.getUsers(userAuth);
         List<GetUsersResponse> response = messangerService.getUsers(userList, userAuth);
         List<RetrieveUsers200ResponseInner> users = response.stream()

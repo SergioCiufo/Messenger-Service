@@ -23,29 +23,14 @@ public class AuthServiceFeignImpl {
     private final AuthServiceFeign authServiceFeign;
     private UserMapper userMapper;
 
-//    public User verifyToken(String token) {
-//        User user = authServiceFeign.verifyToken("Bearer " + token);
-//        return user;
-//    }
-
     public User verifyToken(String token) {
         UserDto userDto = authServiceFeign.verifyToken("Bearer " + token);
         return userMapper.mapToDomain(userDto);
     }
 
-//    public List<User> getUsers() {
-//        return authServiceFeign.getUsers();
-//    }
-
     public List<User> getUsers() {
-       return authServiceFeign.getUsers().stream()
-               .map(userMapper::mapToDomain)
-               .collect(Collectors.toList());
+        return authServiceFeign.getUsers().stream()
+                .map(userMapper::mapToDomain)
+                .collect(Collectors.toList());
     }
-
-//     spostato temporaneamente in mapper
-//    public User mapToDomain(UserDto userDto) {
-//        if(userDto == null) return null;
-//        return new User(userDto.getUsername());
-//    }
 }

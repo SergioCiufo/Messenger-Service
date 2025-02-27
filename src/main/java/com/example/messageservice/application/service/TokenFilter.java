@@ -34,7 +34,7 @@ public class TokenFilter extends OncePerRequestFilter {
         String token = authHeader.substring(7);
         User user = authServiceFeignImpl.verifyToken(token);
 
-        if (user.getUsername() == null) {
+        if (user == null) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             log.error("Utente non valido");
             return;
