@@ -1,14 +1,12 @@
 package com.example.messageservice.application.mapper;
 
 import com.example.messageService.generated.application.model.*;
+import com.example.messageservice.application.util.DateTimeUtil;
 import com.example.messageservice.domain.model.messanger.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.Named;
 
-import java.time.OffsetDateTime;
-
-@Mapper
+@Mapper(componentModel = "spring", uses = DateTimeUtil.class) //componentModel uses etc ci permette di spostare il metodo offSetTime nella util e quindi non testare l'interfaccia
 public interface MessangerMappers {
 
     //GETMESSAGES
@@ -35,11 +33,12 @@ public interface MessangerMappers {
     SendMessage200Response convertFromDomain(PostMessageResponse response);
 
 
-
-    //metodo per convertire la stringa della data ricevuta in OffSetDateTime
-    @Named("stringToOffsetDateTime")
-    default OffsetDateTime stringToOffsetDateTime(String dateString) {
-        return dateString != null ? OffsetDateTime.parse(dateString) : null;
-    }
+//SPOSTATO IN UTIL
+//    //metodo per convertire la stringa della data ricevuta in OffSetDateTime
+//    @Named("stringToOffsetDateTime")
+//    default OffsetDateTime stringToOffsetDateTime(String dateString) {
+////        return dateString != null ? OffsetDateTime.parse(dateString) : null;
+//        return DateTimeUtil.stringToOffsetDateTime(dateString);
+//    }
 
 }
