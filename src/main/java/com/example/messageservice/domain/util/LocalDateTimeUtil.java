@@ -1,4 +1,4 @@
-package com.example.messageservice.domain.utill;
+package com.example.messageservice.domain.util;
 
 import org.springframework.stereotype.Component;
 

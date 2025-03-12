@@ -6,7 +6,7 @@ import com.example.messageservice.domain.model.Message;
 import com.example.messageservice.domain.model.User;
 import com.example.messageservice.domain.model.messanger.*;
 import com.example.messageservice.domain.service.MessangerService;
-import com.example.messageservice.domain.utill.LocalDateTimeUtil;
+import com.example.messageservice.domain.util.LocalDateTimeUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -86,12 +86,12 @@ public class MessangerServiceImpl implements MessangerService {
                 .findFirst()
                 .orElseThrow(() -> new NotFoundException("User not found with username: " + usernameReceiver));
 
-        String nullCheck = messagesService.checkNull(usernameSender, usernameReceiver, content);
+        String nullCheck = messagesService.checkNull(usernameReceiver, usernameSender , content);
         if(!nullCheck.isEmpty()) {
             throw new EmptyFieldException("Campo/i vuoti: " + nullCheck);
         }
 
-        messagesService.sendMessage(usernameSender, usernameReceiver, content);
+        messagesService.sendMessage(usernameReceiver, usernameSender, content);
 
         return PostMessageResponse.builder()
                 .message("Messaggio inviato")

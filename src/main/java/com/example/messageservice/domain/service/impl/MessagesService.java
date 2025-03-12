@@ -3,7 +3,7 @@ package com.example.messageservice.domain.service.impl;
 import com.example.messageservice.domain.repository.MessageServiceRepo;
 import com.example.messageservice.domain.model.Message;
 import com.example.messageservice.domain.model.User;
-import com.example.messageservice.domain.utill.MessageUtil;
+import com.example.messageservice.domain.util.MessageUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

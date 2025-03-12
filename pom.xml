@@ -216,6 +216,7 @@
                         <configuration>
                             <inputSpec>${project.basedir}/src/main/resources/openapi3/Swagger_Servizio_Messaggistica.yaml</inputSpec>
                             <addCompileSourceRoot>true</addCompileSourceRoot>
+                            <!-- è una porcata, il nome messageservice è giusto, ma ij eap fa cagare -->
                             <apiPackage>${project.groupId}.messageService.generated.application.api</apiPackage>
                             <invokerPackage>${project.groupId}.messageService.generated.application.api</invokerPackage>
                             <modelPackage>${project.groupId}.messageService.generated.application.model</modelPackage>
