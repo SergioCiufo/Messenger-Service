@@ -1,5 +1,7 @@
 package com.example.messageservice.application.service;
 
+import com.example.messageservice.application.token.TokenService;
+import com.example.messageservice.domain.exception.TokenUnauthorizedException;
 import com.example.messageservice.domain.model.User;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -13,13 +15,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
 @Log4j2
 public class TokenFilter extends OncePerRequestFilter {
 
-    private final AuthServiceFeignImpl authServiceFeignImpl;
+    private final TokenService tokenService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -31,15 +34,31 @@ public class TokenFilter extends OncePerRequestFilter {
             return;
         }
 
-        String token = authHeader.substring(7);
-        User user = authServiceFeignImpl.verifyToken(token);
+        //il token deve scendere e salire
+//        String token = tokenUtil.subStringAuthHeader(authHeader);
+//        User user = getUser(token);
+//        if (user == null) {
+//            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+//            log.error("Utente non valido");
+//            return;
+//        }
+//        log.info("Token valido");
 
-        if (user == null) {
+//        Optional<User> user = tokenService.getUserByToken(authHeader);
+//        if (user.isEmpty()) {
+//            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+//            log.error("Utente non valido");
+//            return;
+//        }
+
+        Optional<User> user = getUser(authHeader);
+        if (user.isEmpty()) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             log.error("Utente non valido");
             return;
         }
         log.info("Token valido");
+
         //incapsuliamo i dati all'interno di questa funzione di springSecurity (al momento è anche troppo dato che stiamo passando una stringa)
 //        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
 //                username, null, Collections.emptyList()
@@ -47,7 +66,7 @@ public class TokenFilter extends OncePerRequestFilter {
 
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                 //utente //credenziali //ruolo
-                user, null, null);
+                user.get(), null, null);
 
         //conserviamo le informazioni dell'utente autenticato, così spring security sa che l'utente è autenticato e che può effetturare le operazioni
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -55,4 +74,20 @@ public class TokenFilter extends OncePerRequestFilter {
         //passiamo al prossimo filtro della catena
         filterChain.doFilter(request, response);
     }
+
+    private Optional<User> getUser(String authHeader) {
+        try {
+            return  tokenService.getUserByToken(authHeader);
+        }catch(TokenUnauthorizedException ex){
+            return Optional.empty();
+        }
+    }
+
+//    private User getUser(String token) {
+//        try {
+//            return authServiceFeignImpl.verifyToken(token);
+//        }catch(TokenUnauthorizedException ex){
+//            return null;
+//        }
+//    }
 }

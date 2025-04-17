@@ -72,7 +72,8 @@ public class MessangerServiceImpl implements MessangerService {
     @Override
     @Transactional
     public PostMessageResponse sendMessage(PostMessageRequest request, User userAuth, List<User> userList) {
-        String usernameSender = request.getUsernameSender();
+//        String usernameSender = request.getUsernameSender();
+        String usernameSender = userAuth.getUsername();
         String usernameReceiver = request.getUsernameReceiver();
         String content = request.getContent();
 

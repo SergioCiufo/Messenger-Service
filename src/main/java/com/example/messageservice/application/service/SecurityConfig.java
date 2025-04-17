@@ -7,6 +7,10 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Service;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -15,17 +19,42 @@ public class SecurityConfig {
 
     private TokenFilter tokenFilter;
 
+//    @Bean
+//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+//        http
+//                .addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class)
+//                .authorizeRequests()
+//                .anyRequest().authenticated()
+//                .and()
+//                .cors().and()
+//                .csrf()
+//                    .ignoringRequestMatchers("/message", "/conversation")
+//                    .and();
+//
+//        return http.build();
+//    }
+//}
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.cors(cors -> {
+            CorsConfiguration config = new CorsConfiguration();
+            config.setAllowedOriginPatterns(List.of("*"));
+            config.setAllowedMethods(List.of("*"));
+            config.setAllowedHeaders(List.of("*"));
+            config.setAllowCredentials(true);
+
+            UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+            source.registerCorsConfiguration("/**", config);
+            cors.configurationSource(source);
+        });
+
         http
                 .addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
-                .anyRequest().authenticated()
+                .anyRequest().permitAll() // o .authenticated()
                 .and()
-                .cors().and()
-                .csrf()
-                    .ignoringRequestMatchers("/message", "/conversation")
-                    .and();
+                .csrf(csrf -> csrf.disable());
 
         return http.build();
     }

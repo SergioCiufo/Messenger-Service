@@ -3,7 +3,9 @@ package com.example.messageservice.application.service;
 import com.example.messageservice.application.api.feign.AuthServiceFeign;
 import com.example.messageservice.application.mapper.UserMapper;
 import com.example.messageservice.application.model.UserDto;
+import com.example.messageservice.domain.exception.TokenUnauthorizedException;
 import com.example.messageservice.domain.model.User;
+import feign.FeignException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 
@@ -30,23 +33,47 @@ public class AuthServiceImplTest {
     private UserMapper userMapper;
 
     @Test
-    void shouldVerifyTokenReturnUser_whenAllOk() {
+    public void shouldReturnUser_whenTokenIsValid() {
         //PARAMETERS
-        String token = "token";
-        UserDto userDto = new UserDto("userTest");
-        User expectedUser = new User("userTest");
+        String token = "valid.token";
+        String bearerToken = "Bearer " + token;
+        UserDto userDto = new UserDto();
+        userDto.setUsername("testUser");
+
+        User expectedUser = User.builder()
+                .username("testUser")
+                .build();
 
         //MOCK
-        doReturn(userDto).when(authServiceFeign).verifyToken("Bearer " + token);
-        when(userMapper.mapToDomain(userDto)).thenReturn(expectedUser);
+        doReturn(userDto).when(authServiceFeign).verifyToken(bearerToken);
+        doReturn(expectedUser).when(userMapper).mapToDomain(userDto);
 
         //TEST
-        User result = authServiceFeignImpl.verifyToken(token);
+        Optional<User> result = authServiceFeignImpl.verifyToken(token);
 
         //RESULTS
-        Assertions.assertNotNull(result);
-        Assertions.assertEquals(expectedUser.getUsername(), result.getUsername());
-        verify(authServiceFeign, times(1)).verifyToken("Bearer " + token);
+        Assertions.assertTrue(result.isPresent());
+        Assertions.assertEquals(expectedUser, result.get());
+        verify(authServiceFeign).verifyToken(bearerToken);
+        verify(userMapper).mapToDomain(userDto);
+
+    }
+
+    @Test
+    public void shouldThrowException_whenTokenIsForbidden() {
+        //PARAMETERS
+        String token = "expired.token";
+        String bearerToken = "Bearer " + token;
+
+        //MOCK
+        doThrow(FeignException.Forbidden.class)
+                .when(authServiceFeign).verifyToken(bearerToken);
+
+        //TEST + RESULTS
+        Assertions.assertThrows(TokenUnauthorizedException.class,
+                () -> authServiceFeignImpl.verifyToken(token));
+        verify(authServiceFeign).verifyToken(bearerToken);
+        verifyNoInteractions(userMapper);
     }
 
     @Test

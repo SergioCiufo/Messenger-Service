@@ -273,6 +273,30 @@ public class ServizioMessaggisticaApiDelegateImplTest {
         verify(messangerService, times(1)).getSingleConversation(getSingleConversationRequest, userAuth, userList);
     }
 
+    @Test
+    public void shouldReturnUnauthorized_whenExceptionOccurs() {
+        //PARAMETERS
+        User userAuth = User.builder()
+                .username("authUser")
+                .build();
+
+        //MOCK
+        doReturn(userAuth).when(authenticationUserUtil).getUserAuth();
+        doThrow(RuntimeException.class).when(authServiceFeignImpl).getUsers();
+
+        //TEST
+        ResponseEntity<List<RetrieveUsers200ResponseInner>> result = servizioMessaggisticaApiDelegateImpl.retrieveUsers();
+
+        //RESULTS
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(HttpStatus.UNAUTHORIZED, result.getStatusCode());
+        Assertions.assertNull(result.getBody());
+
+        verify(authenticationUserUtil, times(1)).getUserAuth();
+        verify(authServiceFeignImpl, times(1)).getUsers();
+        verifyNoInteractions(messangerService);
+        verifyNoInteractions(messangerMappers);
+    }
 
 
 }

@@ -39,13 +39,18 @@ public class ServizioMessaggisticaApiDelegateImpl implements ServizioMessaggisti
     @Override
     public ResponseEntity<List<RetrieveUsers200ResponseInner>> retrieveUsers() {
         User userAuth =authenticationUserUtil.getUserAuth();
-        List<User> userList = authServiceFeignImpl.getUsers();
-        //List<GetUsersResponse> response = messangerService.getUsers(userAuth);
-        List<GetUsersResponse> response = messangerService.getUsers(userList, userAuth);
-        List<RetrieveUsers200ResponseInner> users = response.stream()
-                .map(messangerMappers::convertFromDomain)
-                .toList();
-        return ResponseEntity.ok(users);
+        log.info("retrieving users");
+        try {
+            List<User> userList = authServiceFeignImpl.getUsers();
+            List<GetUsersResponse> response = messangerService.getUsers(userList, userAuth);
+            List<RetrieveUsers200ResponseInner> users = response.stream()
+                    .map(messangerMappers::convertFromDomain)
+                    .toList();
+            return ResponseEntity.ok(users);
+        }catch(Exception e){
+            log.error("Sending 401 Unauthorized Error");
+            return ResponseEntity.status(401).build();
+        }
     }
 
     @Override

@@ -14,7 +14,7 @@ public class LocalDateTimeUtil {
 
     public String formatCreatedAt(LocalDateTime createdAt){
         return createdAt != null
-                ? createdAt.atZone(ZoneId.of("UTC")).format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
+                ? createdAt.atZone(ZoneId.of("UTC+2")).format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
                 : "defaultDate";
     }
 }
