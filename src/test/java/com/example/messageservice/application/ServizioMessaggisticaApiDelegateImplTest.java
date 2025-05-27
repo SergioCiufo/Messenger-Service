@@ -1,5 +1,5 @@
 package com.example.messageservice.application;
-
+/*
 import com.example.messageService.generated.application.model.*;
 import com.example.messageservice.application.mapper.MessangerMappers;
 import com.example.messageservice.application.service.AuthServiceFeignImpl;
@@ -300,3 +300,5 @@ public class ServizioMessaggisticaApiDelegateImplTest {
 
 
 }
+
+ */

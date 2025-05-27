@@ -15,6 +15,39 @@ spring:
           auth-serviceFeign:
             default-request-headers:
               content-type: application/json
+
+    function:
+      definition: messageConsumer
+    stream:
+      bindings:
+        messageConsumer-in-0:
+          destination: example-topic
+          group: topicGroup
+          binder: consumerBind
+        producer-bind:
+          destination: example-topic
+          binder: producerBind
+      binders:
+        consumerBind:
+          type: kafka
+          default-candidate: false
+          environment:
+            spring:
+              cloud:
+                stream:
+                  kafka:
+                    binder:
+                      brokers: localhost:9092
+        producerBind:
+          type: kafka
+          default-candidate: false
+          environment:
+            spring:
+              cloud:
+                stream:
+                  kafka:
+                    binder:
+                      brokers: localhost:9092
   application:
     name: MessageService
   data:

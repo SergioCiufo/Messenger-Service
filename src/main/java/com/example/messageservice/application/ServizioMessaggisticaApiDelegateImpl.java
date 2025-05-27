@@ -10,6 +10,7 @@ import com.example.messageservice.domain.model.messanger.*;
 import com.example.messageservice.domain.service.MessangerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,6 +25,7 @@ public class ServizioMessaggisticaApiDelegateImpl implements ServizioMessaggisti
     private final MessangerService messangerService;
     private final AuthenticationUserUtil authenticationUserUtil;
     private final AuthServiceFeignImpl authServiceFeignImpl;
+    private final StreamBridge streamBridge;
 
     @Override
     public ResponseEntity<List<RetrieveMessages200ResponseInner>> retrieveMessages() {
@@ -38,6 +40,7 @@ public class ServizioMessaggisticaApiDelegateImpl implements ServizioMessaggisti
 
     @Override
     public ResponseEntity<List<RetrieveUsers200ResponseInner>> retrieveUsers() {
+        streamBridge.send("producer-bind", "I'M CICCIOGAMER89");
         User userAuth =authenticationUserUtil.getUserAuth();
         log.info("retrieving users");
         try {

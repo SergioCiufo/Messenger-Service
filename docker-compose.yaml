@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  message-service:
+    build: .
+    ports:
+      - "8081:8081"
+    environment:
+      # Sovrascrivi gli URL che puntano a 'localhost'
+      - SPRING_CLOUD_OPENFEIGN_CLIENT_REST_AUTH-SERVICE_URL=http://auth-service:8080
+      - SPRING_DATA_MONGODB_URI=mongodb://mongo:27017/MessageService
+    depends_on:
+      - mongo
+
+  # Servizio MongoDB
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"  # Opzionale: utile per debug esterno
+    volumes:
+      - mongo_data:/data/db
+
+  # Servizio Auth (esempio)
+  auth-service:
+    image: your-auth-service-image:latest
+    ports:
+      - "8080:8080"
+
+volumes:
+  mongo_data:
